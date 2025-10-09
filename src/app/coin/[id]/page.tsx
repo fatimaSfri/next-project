@@ -1,0 +1,42 @@
+// ۲. فایل والد: src/app/coin/[id]/page.tsx (دقیقاً کپی کن – import path: ../../../hooks/useCoinDetail)
+'use client';
+import React from 'react';
+import { useParams } from 'next/navigation';
+import {  useCoinDetail } from '../../../hooks/useCoinDetail';
+import CoinDetail from './CoinDetail';
+import Other from './OtherCoinChild'
+
+const CoinDetailPage: React.FC = () => {
+  const params = useParams();
+  const id = params.id as string;
+
+  // فقط hook رو کال کن!
+  const { data: coin, isLoading, error } = useCoinDetail(id);
+
+  if (isLoading) {
+    return (
+      <div className="w-full max-w-7xl mx-auto p-4 text-center">
+        <p className="text-gray-500">در حال بارگذاری جزئیات...</p>
+      </div>
+    );
+  }
+
+  if (error || !coin) {
+    return (
+      <div className="w-full max-w-7xl mx-auto p-4 text-center">
+        <p className="text-red-500">خطا در بارگذاری داده‌ها: {error?.message || 'کوین یافت نشد'}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full max-w-7xl mx-auto p-4">
+      {/* پاس props به child */}
+      <CoinDetail coin={coin} />
+      <Other coin={coin}/>
+
+    </div>
+  );
+};
+
+export default CoinDetailPage;
