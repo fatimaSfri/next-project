@@ -605,7 +605,7 @@ const DataTableWithPagination: React.FC = () => {
 
       {/* Pagination */}
       {totalPages > 0 && (
-        <div className="flex  justify-center mt-4">
+        <div className="flex  justify-center mt-8">
           <div className="flex flex-row-reverse space-x-2 items-center">
             {pageNumbers.map((page, index) => (
               <React.Fragment key={index}>

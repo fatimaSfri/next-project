@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function Header() {
 
     return (
-        <header className="bg-[#F8F9FA] h-[104px]  " dir="rtl">
+        <header className="bg-[#F8F9FA] h-[104px] w-full  " dir="rtl">
             <div className="lg:container w-full  mx-auto h-full flex items-center justify-between">
 
                 <div className="lg:w-8/12 max-lg:w-full max-sm:w-1/2  px-2 h-full flex">
