@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import {  useCoinDetail } from '../../../hooks/useCoinDetail';
 import CoinDetail from './CoinDetail';
 import Other from './OtherCoinChild'
+import Header from '@/app/components/Header';
 
 const CoinDetailPage: React.FC = () => {
   const params = useParams();
@@ -30,7 +31,8 @@ const CoinDetailPage: React.FC = () => {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-4">
+    <div>
+      <Header></Header>
       {/* پاس props به child */}
       <CoinDetail coin={coin} />
       <Other coin={coin}/>
