@@ -90,6 +90,7 @@ interface CurrencyOption {
   label: string;      // نمایش (مثلاً "تومان")
   value: string;      // کد (مثلاً "IRT")
   rateToUSD: number;  // نرخ فرضی برای مثال (هر واحد ارز چند دلار است)
+  icon: string
 }
 
 interface CoinDetailProps {
@@ -108,10 +109,10 @@ interface CoinDetailProps {
 }
 
 const currencyOptions: CurrencyOption[] = [
-  { label: 'تومان', value: 'IRT', rateToUSD: 0.000024 },
-  { label: 'بیت‌کوین', value: 'BTC', rateToUSD: 61000 },
-  { label: 'دلار', value: 'USD', rateToUSD: 1 },
-  { label: 'یورو', value: 'EUR', rateToUSD: 1.07 },
+  { label: 'تومان', value: 'IRT', rateToUSD: 0.000024, icon: '/images/irt.png' },
+  { label: 'بیت‌کوین', value: 'BTC', rateToUSD: 61000, icon: '/images/bitcoin.png' },
+  { label: 'دلار', value: 'USD', rateToUSD: 1, icon: '/images/usd.svg' },
+  { label: 'یورو', value: 'EUR', rateToUSD: 1.07, icon: '/images/eur.svg' },
 ];
 
 /** ====== Helpers ====== **/
@@ -233,8 +234,9 @@ const CoinDetail: React.FC<CoinDetailProps> = ({ coin }) => {
 
   return (
     <div className="  w-full max-sm:px-4 flex items-center justify-center md:py-20 py-10">
-      <div className='lg:w-10/12 sm:w-11/12 w-full flex flex-col sm:flex-row bg-white rounded-2xl shadow-[0px_4px_103px_0px_rgba(13,26,142,0.08)] border border-sky-800 '>
-        <div className="flex flex-col gap-6 sm:w-1/2 sm:border-l max-sm:border-b border-gray-200 lg:p-8 p-4">
+      <div className='lg:w-10/12 sm:w-11/12 w-full flex flex-col sm:flex-row bg-white rounded-2xl shadow-[0px_4px_103px_0px_rgba(13,26,142,0.08)] '>
+        <div className="flex flex-col gap-6 sm:w-1/2 sm:border-l max-sm:border-b border-gray-200 
+        lg:p-8 p-4">
           <p className='font-bold lg:text-base text-sm '>قیمت لحظه ای :</p>
           <div className='flex justify-between border-b border-b-gray-300 '>
             <div className="flex items-center gap-4 mb-6">
@@ -305,79 +307,86 @@ const CoinDetail: React.FC<CoinDetailProps> = ({ coin }) => {
 
 
         </div>
-        <div className="flex flex-col gap-4 sm:w-1/2">
-
-          {/* ارسال می‌کنید */}
-          <div>
-            <label className="block text-gray-700 mb-2 font-medium">ارسال می‌کنید</label>
-            <div className="flex items-center border border-gray-300 rounded-xl overflow-hidden">
+        <div className="flex flex-col gap-2 sm:w-1/2 lg:p-8 p-4">
+          <div className="flex flex-col  gap-4" dir="rtl">
+            <label className="lg:text-base text-xs font-bold">ارسال می‌کنید:</label>
+            <div className="flex items-center lg:rounded-full max-lg:rounded-lg overflow-hidden bg-[#F6F4F4]">
               <input
                 inputMode="decimal"
                 type="text"
                 placeholder="مقدار را وارد کنید"
                 value={fromAmount}
                 onChange={(e) => handleFromInputChange(e.target.value)}
-                className="w-full px-4 py-2 text-gray-800 focus:outline-none"
+                className="w-1/2 py-3 pr-6 h-full text-gray-800 focus:outline-none bg-[#F6F4F4] placeholder:text-[#696464] lg:placeholder:text-sm placeholder:text-xs"
                 aria-label="مقدار ارسالی"
               />
-              <select
-                value={fromCurrency.value}
-                onChange={(e) =>
-                  setFromCurrency(currencyOptions.find((c) => c.value === e.target.value)!)
-                }
-                className="bg-gray-100 text-gray-700 px-3 py-2 border-r border-gray-300 focus:outline-none"
-                aria-label="واحد ارز ارسالی"
-              >
-                {currencyOptions.map((c) => (
-                  <option key={c.value} value={c.value}>
-                    {c.label}
-                  </option>
-                ))}
-              </select>
+              <div className="w-[2px] bg-gray-400 h-4/6"></div>
+              <div className=" w-1/2 flex items-center justify-between px-3 relative">
+                <select
+                  value={fromCurrency.value}
+                  onChange={(e) =>
+                    setFromCurrency(currencyOptions.find((c) => c.value === e.target.value)!)
+                  }
+                  className="appearance-none bg-[#F6F4F4] py-2 focus:outline-none w-full text-[#696464] lg:text-sm text-xs mr-8"
+                  aria-label="واحد ارز ارسالی"
+                >
+                  {currencyOptions.map((c) => (
+
+                    <option key={c.value} value={c.value}>
+                      {c.label}
+                    </option>
+                  ))}
+
+                </select>
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-1 pointer-events-none">
+                  <img
+                    src={currencyOptions.find((c) => c.value === fromCurrency.value)?.icon}
+                    alt={`${fromCurrency.label} icon`}
+                    className="h-5 w-5"
+                    aria-hidden="true"
+                  /></div>
+                <img
+                  src="/images/arrow.svg"
+                  alt="آیکون دراپ‌داون"
+                  className=" text-black pl-3"
+                  aria-hidden="true"
+                />
+              </div>
             </div>
           </div>
 
           {/* دکمه‌ی swap */}
-          <div className="flex justify-center">
+          <div className="flex justify-end mt-4">
             <button
               onClick={handleSwap}
               className="bg-gray-200 hover:bg-gray-300 text-gray-700 p-3 rounded-full transition-all duration-200"
               aria-label="جابه‌جایی جهت تبدیل"
               title="تبدیل جهت (مانند Google Translate)"
             >
-              {/* SVG آیکون دو فلش مخالف */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-5 h-5"
-                aria-hidden
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 7h13m0 0l-4-4m4 4l-4 4M21 17H8m0 0l4-4m-4 4l4 4" />
-              </svg>
+              <img src="/images/noun-back-and-forth.svg" alt="" /> 
             </button>
           </div>
 
           {/* دریافت می‌کنید */}
-          <div>
-            <label className="block text-gray-700 mb-2 font-medium">دریافت می‌کنید</label>
-            <div className="flex items-center border border-gray-300 rounded-xl overflow-hidden">
+          <div className="flex flex-col gap-4" dir="rtl">
+            <label className="lg:text-base text-xs font-bold">دریافت می‌کنید:</label>
+            <div className="flex items-center lg:rounded-full max-lg:rounded-lg overflow-hidden bg-[#F6F4F4]">
               <input
                 type="text"
                 readOnly
                 value={toAmountDisplay}
                 placeholder="مقدار محاسبه می‌شود..."
-                className="w-full px-4 py-2 text-gray-800 bg-gray-50"
+                className="w-1/2 py-3 pr-6 h-full text-gray-800 focus:outline-none bg-[#F6F4F4] placeholder:text-[#696464] lg:placeholder:text-sm placeholder:text-xs"
                 aria-label="مقدار دریافتی (محاسبه‌شده)"
               />
+              <div className="w-[2px] bg-gray-400 h-4/6"></div>
+              <div className=" w-1/2 flex items-center justify-between px-3 relative">
               <select
                 value={toCurrency.value}
                 onChange={(e) =>
                   setToCurrency(currencyOptions.find((c) => c.value === e.target.value)!)
                 }
-                className="bg-gray-100 text-gray-700 px-3 py-2 border-r border-gray-300 focus:outline-none"
+                className="appearance-none bg-[#F6F4F4] py-2 focus:outline-none w-full text-[#696464] lg:text-sm text-xs mr-8"
                 aria-label="واحد ارز دریافتی"
               >
                 {currencyOptions.map((c) => (
@@ -386,13 +395,28 @@ const CoinDetail: React.FC<CoinDetailProps> = ({ coin }) => {
                   </option>
                 ))}
               </select>
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-1 pointer-events-none">
+                  <img
+                    src={currencyOptions.find((c) => c.value === toCurrency.value)?.icon}
+                    alt={`${toCurrency.label} icon`}
+                    className="h-5 w-5"
+                    aria-hidden="true"
+                  /></div>
+                <img
+                  src="/images/arrow.svg"
+                  alt="آیکون دراپ‌داون"
+                  className=" text-black pl-3"
+                  aria-hidden="true"
+                />
+            </div>
             </div>
           </div>
 
           {/* نرخ‌ها */}
-          <div className="mt-2 text-sm text-gray-600 space-y-1">
+         <div className="  flex flex-col gap-4 py-4 font-bold lg:text-base text-sm">
+          <div className='flex justify-between items-center '>
+           <p className=''>نرخ ارز یک</p>
             <p>
-              نرخ ارز ۱: هر {fromCurrency.label} ≈{' '}
               {formatNumberDisplay(
                 Number(toFixedTrim(fromCurrency.rateToUSD / toCurrency.rateToUSD, MAX_DECIMALS)),
                 'fa',
@@ -400,8 +424,10 @@ const CoinDetail: React.FC<CoinDetailProps> = ({ coin }) => {
               )}{' '}
               {toCurrency.label}
             </p>
+            </div>
+            <div className='flex justify-between items-center '>
+           <p>نرخ ارز دو</p>
             <p>
-              نرخ ارز ۲: هر {toCurrency.label} ≈{' '}
               {formatNumberDisplay(
                 Number(toFixedTrim(toCurrency.rateToUSD / fromCurrency.rateToUSD, MAX_DECIMALS)),
                 'fa',
@@ -410,14 +436,21 @@ const CoinDetail: React.FC<CoinDetailProps> = ({ coin }) => {
               {fromCurrency.label}
             </p>
           </div>
+          </div>
 
           {/* دکمه ادامه خرید / تبدیل */}
-          <div className="mt-4 text-center">
+          <div className="mt-2 text-center">
             <button
               onClick={handleConvertClick}
-              className="bg-[#1652F0] hover:bg-[#1238B0] text-white font-medium px-6 py-3 rounded-xl transition-colors duration-200"
+                className=" border border-[#0D1A8E] w-full py-3 rounded-full transition-colors duration-200 text-[#0D1A8E] font-bold lg:text-base text-sm cursor-pointer max-lg:hidden"
             >
               ادامه خرید
+            </button>
+            <button
+              onClick={handleConvertClick}
+                className=" bg-[#1652F0] w-[97%] py-4 rounded-xl transition-colors duration-200 text-white font-bold lg:text-base text-sm cursor-pointer lg:hidden"
+            >
+              ثبت سفارش خرید
             </button>
           </div>
         </div>
