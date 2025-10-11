@@ -6,6 +6,10 @@ import {  useCoinDetail } from '../../../hooks/useCoinDetail';
 import CoinDetail from './CoinDetail';
 import Other from './OtherCoinChild'
 import Header from '@/app/components/Header';
+import About from './About';
+import MoreDetails from './MoreDetails';
+import Questions from './Questions'
+import Footer from '@/app/components/Footer';
 
 const CoinDetailPage: React.FC = () => {
   const params = useParams();
@@ -34,8 +38,12 @@ const CoinDetailPage: React.FC = () => {
     <div>
       <Header></Header>
       {/* پاس props به child */}
-      <CoinDetail coin={coin} />
+      <CoinDetail coin={coin}/>
       <Other coin={coin}/>
+      <About coin={coin}/>
+      <MoreDetails coin={coin}/>
+      <Questions/>
+      <Footer/>
 
     </div>
   );
