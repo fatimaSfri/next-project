@@ -46,9 +46,9 @@ export default function Header() {
                     <div>
                     
                         <div className="flex items-center justify-between">
-                            {/* profile */}
+                            
                             <div className="rounded-full aspect-square lg:min-w-10 max-lg:min-w-6 max-w-14 bg-gray-200 -mt-1 mx-2 overflow-hidden">
-                                <img src="./images/Group.png" alt="not found"  className="w-full h-full object-cover" />
+                                <img src="/images/Group.png" alt="not found"  className="w-full h-full object-cover" />
                             </div>
 
                             {/* name */}
