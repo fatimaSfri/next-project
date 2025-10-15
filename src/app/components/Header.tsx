@@ -36,7 +36,7 @@ export default function Header() {
                     </nav>
 
                 </div>
-                <div className="lg:w-4/12 max-lg:w-6/12 max-sm:w-auto  px-2 h-full flex items-center lg:gap-8 max-lg:justify-between justify-end">
+                <div className="lg:w-4/12 max-lg:w-6/12 max-sm:w-auto  px-2 h-full flex items-center gap-8  justify-end">
                     <div className="flex items-center max-sm:hidden">
                        
                         <Image src="/images/phone.svg" alt="not found" width={24} height={24} 

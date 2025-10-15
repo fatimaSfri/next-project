@@ -19,7 +19,7 @@ const OtherCoinChild: React.FC<OtherCoinChildProps> = ({ coin }) => {
           <span>توضیحات بیشتر درباره</span>
         {coin.fa_name}
       </div>
-        <div className=" leading-relaxed text-justify py-6 lg:text-base sm:text-sm text-xs ">
+        <div className=" leading-relaxed text-justify py-10 lg:text-base sm:text-sm text-xs ">
          <p > {coin.about}</p>
          <p> {coin.about}</p>
         </div> 

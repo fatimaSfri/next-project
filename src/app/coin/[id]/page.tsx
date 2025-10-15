@@ -1,4 +1,3 @@
-// ۲. فایل والد: src/app/coin/[id]/page.tsx (دقیقاً کپی کن – import path: ../../../hooks/useCoinDetail)
 'use client';
 import React from 'react';
 import { useParams } from 'next/navigation';
@@ -7,15 +6,16 @@ import CoinDetail from './CoinDetail';
 import Other from './OtherCoinChild'
 import Header from '@/app/components/Header';
 import About from './About';
+import Chart from './Chart';
 import MoreDetails from './MoreDetails';
-import Questions from './Questions'
+import Questions from './Questions';
 import Footer from '@/app/components/Footer';
+import StartNow from './StartNow';
 
 const CoinDetailPage: React.FC = () => {
   const params = useParams();
   const id = params.id as string;
 
-  // فقط hook رو کال کن!
   const { data: coin, isLoading, error } = useCoinDetail(id);
 
   if (isLoading) {
@@ -37,12 +37,13 @@ const CoinDetailPage: React.FC = () => {
   return (
     <div>
       <Header></Header>
-      {/* پاس props به child */}
       <CoinDetail coin={coin}/>
       <Other coin={coin}/>
       <About coin={coin}/>
+      <Chart coin={coin} />
       <MoreDetails coin={coin}/>
       <Questions/>
+      <StartNow coin={coin}/>
       <Footer/>
 
     </div>

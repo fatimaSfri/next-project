@@ -6,9 +6,9 @@ import clsx from 'clsx';
 type Locale = 'fa' | 'en';
 
 interface CurrencyOption {
-  label: string;      // نمایش (مثلاً "تومان")
-  value: string;      // کد (مثلاً "IRT")
-  rateToUSD: number;  // نرخ فرضی برای مثال (هر واحد ارز چند دلار است)
+  label: string;      
+  value: string;     
+  rateToUSD: number;  
   icon: string
 }
 
@@ -44,11 +44,9 @@ const normalizeNumberString = (s: string) => {
   if (!s) return '';
   let t = s.trim();
   t = persianToLatinDigits(t);
-  // حذف فاصله‌ها و کاماها و علامت‌های هزارگان (همچون '٬' و '،')
   t = t.replace(/[,٬\s\u060C]/g, '');
-  // اجازه دهید فقط ارقام، نقطه و منفی داشته باشیم
   t = t.replace(/[^0-9.\-]/g, '');
-  // اگر بیش از یک نقطه بود، فقط اولین نقطه را نگه‌دار
+
   const parts = t.split('.');
   if (parts.length > 2) t = parts.shift() + '.' + parts.join('');
   return t;
@@ -60,14 +58,12 @@ const parseNumber = (s: string) => {
 };
 
 const toFixedTrim = (n: number, decimals = 6) => {
-  // گرد کردن و حذف صفرهای انتهایی
-  const fixed = n.toFixed(decimals);
+ const fixed = n.toFixed(decimals);
   return fixed.replace(/\.?0+$/, '');
 };
 
 const formatNumberDisplay = (n: number, locale: Locale = 'fa', maxFraction = 6) => {
   if (!Number.isFinite(n)) return '';
-  // برای نمایش (مثلاً در فیلد مقصد) از locale استفاده می‌کنیم
   return n.toLocaleString(locale === 'fa' ? 'fa-IR' : 'en-US', {
     maximumFractionDigits: maxFraction,
   });
@@ -83,24 +79,21 @@ const CoinDetail: React.FC<CoinDetailProps> = ({ coin }) => {
 
   const [fromCurrency, setFromCurrency] = useState<CurrencyOption>(currencyOptions[0]);
   const [toCurrency, setToCurrency] = useState<CurrencyOption>(currencyOptions[1]);
-
-  // fromAmount => متنِ فیلدِ مبدأ (قابل ویرایش). به صورت رشته نگه‌داشته می‌شه تا خالی بودن حفظ شه.
   const [fromAmount, setFromAmount] = useState<string>('');
-  // toAmount => مقدار محاسبه‌شده (رشته عددی; ذخیره‌شده به صورت لاتین). برای نمایش قالب‌بندی‌شده استفاده می‌کنیم.
   const [toAmount, setToAmount] = useState<string>('');
 
   const MAX_DECIMALS = 6;
 
-  // تبدیل کلی (عدد -> عدد) با گرد کردن معقول
+
   const convertNumber = (valueStr: string, from: CurrencyOption, to: CurrencyOption) => {
     const valueNum = parseNumber(valueStr);
     if (Number.isNaN(valueNum)) return '';
     const rawResult = (valueNum * from.rateToUSD) / to.rateToUSD;
-    // گرد کن و تبدیل به رشته بدون صفرهای انتهایی
+   
     return toFixedTrim(rawResult, MAX_DECIMALS);
   };
 
-  // هر بار مقدار مبدأ یا ارزها عوض شد، مقصد را به‌روز کن (رفتار خودکار مانند گوگل-ترنسلیت)
+
   useEffect(() => {
     if (!fromAmount) {
       setToAmount('');
@@ -110,24 +103,22 @@ const CoinDetail: React.FC<CoinDetailProps> = ({ coin }) => {
     setToAmount(result);
   }, [fromAmount, fromCurrency, toCurrency]);
 
-  // وقتی کاربر روی دکمه "تبدیل" کلیک کنه — صریحاً تبدیل را اجرا کن (برای دسترسی)
+
   const handleConvertClick = () => {
     if (!fromAmount) return;
     const result = convertNumber(fromAmount, fromCurrency, toCurrency);
     setToAmount(result);
   };
 
-  // رفتار swap مثل گوگل-ترنسلیت:
-  // اگر فیلد مقصد مقدار داشته باشه، اون مقدار به مبدأ منتقل میشه و دوباره تبدیل انجام میشه.
-  // اگر مقصد خالی باشه، فقط ارزها سواپ می‌شن و اگر مبدأ مقدار داشت، مجدداً تبدیل انجام میشه.
+
   const handleSwap = () => {
     const nextFrom = toCurrency;
     const nextTo = fromCurrency;
 
-    // اگر مقصد قبلی مقدار داشت => اون مقدار تبدیل‌شده رو به مبدأ جدید می‌دیم (مثل Google Translate)
+
     const nextFromAmountCandidate = toAmount !== '' ? toAmount : fromAmount;
 
-    // محاسبهٔ مقصد جدید بر اساس مقادیر بعد از سواپ
+   
     const nextToAmount = nextFromAmountCandidate
       ? convertNumber(nextFromAmountCandidate, nextFrom, nextTo)
       : '';
@@ -138,14 +129,14 @@ const CoinDetail: React.FC<CoinDetailProps> = ({ coin }) => {
     setToAmount(nextToAmount);
   };
 
-  // هنگام تایپ در فیلد مبدأ: مقدار ورودی را نرمالیزه و ذخیره کن (این نسخه ارقام فارسی را به لاتین تبدیل می‌کند)
+ 
   const handleFromInputChange = (value: string) => {
-    // اجازه می‌دیم کاربر نقطه و ارقام و منفی وارد کنه؛ بقیه حروف حذف می‌شن.
+
     const normalized = normalizeNumberString(value);
     setFromAmount(normalized);
   };
 
-  // نمایشِ مقادیر قالب‌بندی‌شده برای فیلد مقصد
+
   const toAmountDisplay = toAmount ? formatNumberDisplay(Number(toAmount)) : '';
   if (!coin) {
     return <p className="text-red-500">داده کوین یافت نشد!</p>;
@@ -184,8 +175,8 @@ const CoinDetail: React.FC<CoinDetailProps> = ({ coin }) => {
             <div className={clsx(
               'lg:text-base text-xs',
               {
-                'text-red-500': coin.daily_change_percent < 0, // منفی: قرمز
-                'text-green-500': coin.daily_change_percent >= 0, // مثبت یا صفر: سبز
+                'text-red-500': coin.daily_change_percent < 0,
+                'text-green-500': coin.daily_change_percent >= 0, 
               }
             )} dir='ltr'>{formatNumber(coin.daily_change_percent)}%</div>
           </div>
@@ -357,7 +348,7 @@ const CoinDetail: React.FC<CoinDetailProps> = ({ coin }) => {
           </div>
           </div>
 
-          {/* دکمه ادامه خرید / تبدیل */}
+        
           <div className="mt-2 text-center">
             <button
               onClick={handleConvertClick}
